@@ -1,0 +1,33 @@
+\chapter{Unit Of Work Pattern}
+
+\section{Benefits}
+\begin{itemize}
+    \item Helps ensure that either all transactions in a unit of work are committed or none are.
+    \item Minimizes database calls
+\end{itemize}
+
+\section{Example}
+
+\begin{lstlisting}
+public void UpdateCustomerAndProcessOrder(Customer customer, Order order)
+{
+    using (var context = new MyDbContext())
+    {
+        try
+        {
+            // Update customer details
+            context.Customers.Update(customer);
+            context.SaveChanges();  // Save customer update to the database
+
+            // Process order
+            context.Orders.Add(order);
+            context.SaveChanges();  // Save order to the database
+        }
+        catch (Exception ex)
+        {
+            // Handle exception
+        }
+    }
+}
+\end{lstlisting}
+\section{Eager Loading}

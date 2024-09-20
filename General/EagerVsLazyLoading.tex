@@ -1,0 +1,54 @@
+
+
+
+\chapter{Eager vs Lazy Loading}
+
+Two distinctive strategies for loading related data in an object or entity. The terms are commonly used in the context of Object Relational Mapping(ORM) frameworks like Entity Framework.
+
+\section{Eager Loading}
+\begin{itemize}
+\item The related data will be loaded immediately as part of the initial database query.
+\item Useful when you know you're going to need the data right away, thus avoiding the need to make a subsequent database call.
+\item Consumes more memory initially.
+\end{itemize}
+
+\begin{lstlisting}
+// Eager Loading with Entity Framework
+var students = context.Students
+                      .Include(s => s.Courses) // Loads related Courses as well
+                      .ToList();
+\end{lstlisting}
+
+\section{Lazy Loading}
+\begin{itemize}
+\item The related data will be loaded only when it's requested
+\item Separate queries will be used to load the data.
+\item Lower memory usage upfront.
+\item Configured by default in EF6, however not configured in EFCore.
+\item in EF Core we need to 
+\begin{lstlisting}
+dotnet add package Microsoft.EntityFrameworkCore.Proxies
+\end{lstlisting}
+and enable in code 
+\begin{lstlisting}
+public class MyDbContext : DbContext
+{
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseSqlServer("YourConnectionString")
+            .UseLazyLoadingProxies();  // Enable lazy loading proxies
+    }
+}
+\end{lstlisting}
+\end{itemize}
+
+The lazily loaded entity can then be accessed when needed like this: 
+
+\begin{lstlisting}
+// Lazy Loading with Entity Framework (when enabled)
+var student = context.Students.First(); // Only Student is loaded
+
+var courses = student.Courses; // Courses are loaded when accessed
+\end{lstlisting}
+

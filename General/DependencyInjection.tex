@@ -1,0 +1,33 @@
+\chapter{Dependency Injection}
+
+\section{Singleton}
+	\begin{itemize}
+		\item Only one instance is available throughout the lifetime of the application
+		\item Good for services which don't need to be recreated and can share their state
+		\item Use cases
+		\begin{itemize}
+			\item Configuration objects
+			\item Logging services
+			\item Database connection pools
+			\item Caching mechanisms
+		\end{itemize}
+	\end{itemize}
+\section{Scoped}
+	\begin{itemize}
+		\item Created once per request and disposed when the request ends.
+		\item Use cases
+		\begin{itemize}
+			\item Entity Framework DbContext
+			\item Services which track session data
+		\end{itemize}
+	\end{itemize}
+\section{Transient}
+	\begin{itemize}
+		\item Created \textbf{each time it is requested}
+		\item Ideal for lightweight, stateless objects
+		\item Use cases
+		\begin{itemize}
+			\item Data Transformers, Validators, Mappers
+			\item Short-lives services which need to be frequently created
+		\end{itemize}
+	\end{itemize}

@@ -1,0 +1,58 @@
+\chapter{Garbage collection vs IDisposable}
+
+If C\# is a garbage collected language then why do we have something like the IDisposable interface?
+
+\section{Garbage Collection}
+\begin{itemize}
+
+\item Garbage Collection is an automatic memory management feature provided by the .NET Runtime. The GC automatically tracks which objects are in use and which are not. When an object is no longer referenced by the application it becomes eligible for garbage collection and it's memory can be reclaimed.
+
+\item Garbage Collection can handle \textbf{Managed Resources} like arrays, lists, etc.
+
+\item Garbage Collection cannot handle \textbf{Unmanaged Resources} such as file handles, database connections, network sockets and memory allocated outside of the .NET Runtime(via Invoke or COM Objects).
+
+\item Generations. The Garbage Collector optimizes performance by organizing objects into Generations.
+\begin{itemize}
+    \item Generation 0: Newly created objects
+    \item Generation 1: Objects which have survived at least one garbage collector cycle
+    \item Generation 2: Objects which have survived multiple GC cycles
+\end{itemize}
+
+\item The Garbage Collector works in cycles. When it determines that memory is low or usage is high it halts the application and starts collecting objects which are no longer reachable.
+
+\end{itemize}
+
+\section{IDisposable}
+\begin{itemize}
+    \item Things like database connections, file handlers, network sockets are not managed by the GC. In these cases we need to handle them explicitly ourselves.
+    \item Deterministic finalization: Unline garbage collection which happens at undetermined intervals, implementing IDisposable allows resources to be cleaned up immediately and predictably, preventing resource exhaustion. 
+    \item Avoiding finalizers overhead: Destructors(Finalizers) have a performance cost, IDisposable avoids relying on finalizers and cleans up more efficiently
+    \item Using statement. The using statement is syntactic sugar which implements IDisposable in a try catch block in the back.
+
+    That means that the using syntactic sugar statement:
+    
+    \begin{lstlisting}
+using (var manager = new FileManager("file.txt"))
+{
+    // Use the FileManager
+}
+    \end{lstlisting}
+
+Is this in the back.
+
+\begin{lstlisting}
+FileManager manager = null;
+try
+{
+    manager = new FileManager("file.txt");
+    // Use the FileManager
+}
+finally
+{
+    if (manager != null)
+    {
+        manager.Dispose();  // Ensures that Dispose is called to clean up resources
+    }
+}
+\end{lstlisting}
+\end{itemize}

@@ -1,0 +1,44 @@
+\page{Base64}
+
+\section{Intro}
+Base64 is an encoding scheme which uses 64 characters to represent binary data in an ANSCII string format. Primarily used to encode binary data into a text based format. It utilizes the below 64 charactes: 
+\begin{itemize}
+    \item A-Z (upper case)
+    \item a-z (lowercase)
+    \item 0-9 (digits)
+    \item + and / symbols
+    \item Padding characters(=) are sometimes added to make multiples of 4 bytes.
+\end{itemize}
+
+\section{Why base 64?}
+\begin{itemize}
+    \item Text based. Some systems like (email, urls and html) are designed to handle text data, not binary data.
+    \item Compact representation
+\end{itemize}
+
+\section{Uses}
+\begin{itemize}
+    \item Embedding images in HTML or CSS.
+    \begin{lsllisting}
+       <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA
+        AAAFCAYAAACNbyblAAAAHElEQVQI12P4
+        //8/w38GIAXDIBKE0DHxgljNBAAO9TXL
+        0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot">   
+    \end{lsllisting}
+    
+    \item HTTP Basic Authentication. Sending usename:password encoded.
+    \begin{lsllisting}
+        GET /protected-resource HTTP/1.1
+        Host: example.com
+        Authorization: Basic dXNlcjpwYXNzd29yZA==
+    \end{lsllisting}
+
+    \item Storing Binary Data in Json
+
+    \begin{lsllisting}
+        {
+            "filename": "document.pdf",
+            "filedata": "JVBERi0xLjcKJYGBgYEKC..."
+        }
+    \end{lsllisting}    
+\end{itemize}

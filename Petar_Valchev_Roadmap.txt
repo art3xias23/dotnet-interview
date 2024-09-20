@@ -1,0 +1,760 @@
+SDI concepts {
+	- REST {
+		- PUT vs POST vs PATCH {
+			- post - create (POST /users)
+			- put - replace all fields for a single entry (PUT /users/123)
+			- patch - replace selected fields for a signle entry (PATCH /users/123)
+		}
+	}
+	- database partitioning
+		- vertical partitioning (physical design) vs database normalization (logical design) {
+			- https://stackoverflow.com/questions/37051398/difference-between-normalization-and-partitioning-in-dbms
+			- the client of the DB is agnostic to the vartical partition because it's physical design rather than logical, so technically you query the same table and don't care if that table is physically split
+		}
+		- horizontal partitioning vs sharding {
+			- explained here - https://www.youtube.com/watch?v=d1fXBLqnFvc
+			- horizontal partitioning - splits big table into multiple tables in the same database (customer_west, customer_east, etc) - table name changes
+			- sharding - splits big table into multiple tables across multiple database servers - server changes, name doesn't {
+				- decreases load
+				- no ACID because different servers
+				- no joins
+			}
+			- Youtube sharding case {
+				- they used MySQL with sharding -> created a lot of problems + tightly coupled code (app logic + db logic)
+				- they created Vitess - middleware on top of MySQL that does the sharding for you
+			}
+			- order of consideration (https://www.youtube.com/watch?v=iHNovZUZM3A):
+				1) if a table becomes big - indexing
+				2) if indexing won't work or still slow - horizontal partitioning
+				3) if the server can't handle the load even if the requests to the DB are fast - do a replication (master-slave) with partitions - write in the master and balance the reads from the slaves
+				4) if the servers still can't handle the load - sharding
+			- most relational databases do horizontal partitioning out of the box (if enabled) (like we had in DBK with table $1), while sharding logic should be implemented on app level
+		}
+	- database replication
+	- database normalization {
+		- process of organizing data
+		- goals {
+			- to prevent data repetition -> to reduce the size of the database
+			- to prevent insertion/deletion/updation anomalies {
+				- assume player, team, and stadium entries in a single table
+				- insertion anomaly - insert repetitive data (insert stadium for player every time)
+				- updation anomaly - update repetitive data (update stadium for player every time)
+				- deletion anomaly - delete data that shouldn't be deleted (if we delete all the players, we delete all the stadiums)
+			}
+			- after normalization -> player, team, and stadium tables
+		}
+	}
+	- database denormalization
+	- caching {
+		- nice article - https://levelup.gitconnected.com/everything-you-need-to-know-about-caching-system-design-932a6bdf3334
+	}
+	- pre-computation
+	- sticky session {
+		- keep the client on the same app server
+		- we can do this with cookies
+		- it is opposed to consistent hashing
+		- https://www.youtube.com/watch?v=xKdnvYThFwE
+	}
+	- lazy loading
+	- session vs token auth {
+		- https://www.youtube.com/watch?v=UBUNrFtufWo
+	}
+	- replication
+	- message queue/topics(pub-sub) {
+		- if request processing will take a long time - queue is a good choice
+		- queue - once a service consumes an item, it is removed
+		- topic - if a service is subscribed to a topic it can access an item even if another service has accessed it before
+	}
+	- push notifications {
+		- they always have to go through vendor servers
+		- https://www.youtube.com/watch?v=ATYhOlK11QM
+	}
+	- 3-way handshake {
+		- -> SYN
+		- <- SYN + ACK
+		- -> ACK
+		- -> HTTP GET
+	}
+	- single point of failure
+	- load balancing {
+		- Azure load balancer uses request hashing algorithm to distribute the load by default (it hashes source ip:port, destination ip:port, etc.)
+		- it uses consistent hashing
+	}
+	- eventual consistency
+	- search index {
+		- https://www.youtube.com/watch?v=SW_gfeug9hM
+		- a structure to map search queries/terms to URLs/documents/entries/etc.
+	}
+	- api gateway {
+		- server sitting between a client and a server
+		- provides services like {
+			- request validation
+			- allow/deny list check
+			- authentication
+			- rate limit
+			- logging/monitoring/analytics
+		}
+	}
+	- checksum
+	- fan-out {
+		- something like pregeneration of read data on write (e.g. twitter timeline)
+	}
+	- deduplication {
+		- https://www.youtube.com/watch?v=jjlNMt0BGQ4
+		- uses hash to recognize if there is a change
+		- file level deduplication vs block level deduplication
+		- post-process deduplication vs in-line deduplication
+	}
+	- HTTP {
+		- HTTP request vs. HTTP polling request vs. HTTP long-polling request vs. Web Sockets vs SSE vs Webhooks {
+			- http request - single request
+			- short polling - multiple requests periodically, many empty responses
+			- long polling - single request, uni-directional communication is kept open until an update is received, after that a new connection is opened
+			- web sockets - long-lived HTTP connection, bi-directional communication is kept open at all times
+			- sse - long-lived HTTP connection, uni-directional communication (server to client) is kept open at all times
+			- webhooks {
+				- https://www.youtube.com/watch?v=Mfzucn4f9Xk
+				- if system1 needs to change something in case of an event that happens in system2, system1 doesn't need to constantly poll system2, instead system1 can subscribe for a webhook in system2 and have system2 send an update in case of this event happening
+			}
+		}
+		- HTTP vs HTTPS {
+			- http over SSL
+			- https - we are encrypting our network traffic
+		}
+	}
+	- what happens when we type url in the browser {
+		- figure out HTTP or HTTPS - the browser looks in HSTS - if the url is not there, it is HTTP (port 80), otherwise it is HHTPS (port 443)
+		- DNS lookup - find ip by domain, protocol and port {
+			- check local DNS if we have the ip cached
+			- check the hosts file
+			- check global DNS
+		}
+		- establish TCP connection
+		- create HTTP GET request
+		- get response
+		- https://www.youtube.com/watch?v=dh406O2v_1c
+	}
+	- peer to peer network
+	- kubernetes/service fabric {
+		- container orchestrator
+	}
+	- robots.txt {
+		- allows us to specify parts of our system that web crawlers should exclude
+	}
+	- geohash and quadtree {
+		- solution for storing geographical data (latitude and longitude)
+		- useful when designing something like yelp that needs to keep points on the map
+		- quadtree - when a node becomes big, break into four children
+		- quadtree can use geohash for navigating through the nodes
+	}
+	- docker vs virtual machines {
+		- https://www.youtube.com/watch?v=5GanJdbHlAA
+	}
+	- serverless (backend as a service)
+	- hashing, encoding, encryption {
+		- encoding - e.g. send image over http {
+			- algorithms {
+				- base64 ([A-Z, a-z, 0-9, +/])
+			}
+		}
+		- https - we are encrypting our network traffic
+		- hashing {
+			- converting data into fixed-length strings {
+				- no matter the length of the input string we would get the same output string
+			}
+			- reasons {
+				- efficiency - shorten url
+				- security - hash a password
+			}
+			- algorithms {
+				- MD5 - 128 bits / 32 characters
+				- SHA1 - 160 bits / 40 characters
+				- SHA256 - 256 bits / 64 characters
+			}
+			- non-reverseable
+		}
+		- password hashing - https://www.youtube.com/watch?v=z8tUW8Z96dI
+		- hashing and salting
+	}
+	- SSL/TLS {
+		- standard technology for securing an internet connection by encrypting data sent between a website and a browser
+		- both SSL and TLS have the same specification
+		- let's say we have a client, a server, and a certificate authority (CA)
+		- the server gets a self-signed certificate from the CA
+		- the client (browser) already has the self-signed certificate issued by the CA
+		- this way client and server can establish an encrypted connection
+		- https://www.youtube.com/watch?v=LJDsdSh1CYM
+	}
+	- consistent hashing {
+		- can be used in load balancing between horizontal database partitions or cache servers {
+			- it is used in database partitioning when we want to avoid resharding/repartitioning (redistributing) when we add or remove server (and therefore change hashing function)
+			- is is used in caching when we want to avoid cache misses when we add or remove server (and therefore change hashing function)
+		}
+		- https://www.youtube.com/watch?v=tHEyzVbl4bg&t=2s
+	}
+	- read optimized vs write optimized
+	- file vs. block vs object cloud storage {
+		- file storage - HDFS
+		- object storage - Azure blob storage
+	}
+	- proxy vs reverse proxy {
+		- proxy - server doesn't know about client
+			- used for anonimity
+		- reverse proxy - client doesn't know which server it is connecting to
+			- used for load balancing
+		- https://www.youtube.com/watch?v=ozhe__GdWC8
+	}
+	- distributed consensus {
+		- https://www.youtube.com/watch?v=GeGxgmPTe4c
+		- async vs sync
+		- we can sync via transaction log (the copy just runs the same commands/transactions as the original)
+		- master/slave, master/master replication
+		- split brain problem
+		- distributed consensus (at least 3 nodes) - a way for multiple nodes to agree on the same value
+		- reasons to use {
+			- backup
+			- do analytics on the slave
+			- do only read operations on the slave
+		}
+		- we can combine distributed consensus with database sharding
+	}
+	- multiprocessing, multithreading, etc.
+	- relational vs non-relational databases {
+		- non-relational databases types {
+			- key-value stores (redis, dynamoDB) {
+				- redis {
+					- key-value store
+					- in-memory
+					- can be used as database or cache
+					- supports different data types
+					- build in replication (async master-slave replication)
+					- non-durable (because it's in-memory - if we stop and start the server we would loose the values we had)
+						- that's why redis is good for cache but not so much as a database (although possible)
+						- dynamoDB is also key-value store but it is SSD
+				}
+			}
+			- document databases (mongoDB, firestore)
+			- wide-column databases {
+				- e.g. cassandra
+				- good for quicker scanning of big amounts of data {
+					- in relational databases (row-oriented representation) even if we want to read just a singe column, we read all the columns because of properties of the disk
+					- wide-column databases (column-oriented representation) store each column in a separate file on the disk
+					- columns are compressed (e.g. if we have four sequential records we can write them as "record x 4" instead of writing it four times)
+					- we cannot perform joins in wide-column database - we either do it in the logic or create a separate denormalized table with the result
+				}
+				top video - https://www.youtube.com/watch?v=w_B0AKMaRzE
+			}
+			- graph databases (neo4j)
+		}
+		- ACID - https://www.youtube.com/watch?v=pomxJOFVcQs
+	}
+	- optimistic vs pessimistic locking {
+		- optimistic {
+			- check the version
+			- write back only if the version hasn't changed
+			- rollback if the version has changed
+			- used when we expect less collisions
+			- ex: user basket
+		}
+		- pessimistic {
+			- lock the record/object so no one else can use it
+			- when we expect a lot of collisions
+			- ex: table with bank accounts
+		}
+	}
+	- CDN
+	- pool of workers / thread pool {
+		- if there are a lot of clients for our server each of the clients might create their own thread
+		- for this reason we might use a pool of predefined number of threads which are waiting to do a work
+		- good for jobs
+		- good example of a system design with pool of workers - https://www.youtube.com/watch?v=q0KGYwNbf-0
+	}
+	- DB indexes {
+		- clustered (phonebook), nonclustered(book index), composite index - https://www.youtube.com/watch?v=EZ3jBam2IEA
+		- the primary key has a clustered index
+		- for strings that are not PKs - nonclustered index
+		- colums we are joining should be indexed
+		- composite indexes - e.g. firstName and lastName
+		- indexes can decrease performace, because every time we update something that is indexed, we should also update the index, so we should index only the columns that are used frequently
+	}
+	- cluster {
+		- distributed vs cluster {
+			- distributed - distributing different services into different machines
+			- cluster - multiple servers are grouped together and running the same service
+		}
+		- cluster might be used for:
+			- redundancy
+			- load balancing
+			- performance (the service uses the resources of a couple machines)
+	}
+	- event driven architecture {
+		- pub/sub is event driven
+	}
+	- non-functional requirements {
+		- http://www.julianbrowne.com/article/nfrs
+		- CAP theorem {
+			- https://www.youtube.com/watch?v=k-Yaq8AHlFA
+		}
+		- latency, throughput, bandwidth {
+			- https://www.comparitech.com/net-admin/latency-vs-throughput/
+			- https://www.ecessa.com/blog/what-are-bandwidth-latency-and-throughput-and-what-is-right-for-your-business/
+			- latency and throughput are characteristics of performace, so if we want to be more concrete we should use one of these two
+			- we want balanced network - low latency and appropriate amount of throughput
+		}
+		- scalability
+		- reliability {
+			- example: any uploaded photo or video should never be lost
+		}
+		- availability
+		- efficiency
+	}
+	- Spring-like frameworks {
+		- IoC vs DI {
+			- IoC - framework initializes an object and passes it as a parameter
+			- DI - we inject the dependencies in a centralized place (e.g. in Spring - an XML configuration file + @Autowired annotation)
+		}
+		- modularity
+		- build tools
+		- ORM
+	}
+
+	- SOLID {
+		- S = single responsibility
+		- O = open for extension, closed for modification {
+			- if we want to modify - extend or use decorator
+		}
+		- L = Liskov substitution {
+			- a child should be able to do everyting a parent can
+			- instead of having Child class extend Parent class, have a Human class and Child and Parent to extend Human, because a Child class cannot do everyting a Parent class can
+		}
+		- I = Interface segregation {
+			- don't create too big interfaces, split into smaller ones
+		}
+		- D = Dependency inversion - high-level modules shouldn't depend on low-level modules, they should both depend on abstraction {
+			- inject dependencies into classes rather than create them
+			- use abstractions for these dependencies
+			- e.g. don't instantiate MySQL dependency into your class, instead inject Database dependency (MySQL implements Database)
+		}
+	}
+	- OS {
+		- processes and threads {
+			- process - program in execution
+			- thread {
+				- a unit of execution within a process
+				- set of operations
+			}
+			- when a program begins it's execution it becomes a process and within the process there might be many threads
+		}
+		- cores {
+			- CPU has cores
+			- number of cores = number of operations (threads) happening at the same time
+			- parallelism - multiple operations (threads) happening at the same time
+			- clockspeed - number of operations CPU can process per second (GHz)
+			- core can process one thread and then switch to another
+		}
+		- concurrency - a core switching between multiple threads
+		- mutex {
+			- mutual exclusion
+			- prevents threads from accessing the same resource at the same time
+			- one thread aquires a lock for a resource (e.g. piece of memory) and that lock blocks other threads from using it
+			- a way to prevent deadlocks
+		}
+		- semaphore {
+			- an abstraction used to solve synchronization problems
+			- integer >= 0
+			- used by all the processes that need to sync their operation
+			- two operations that are periodically called:
+				- wait(s) - wait until s>0, then s--
+				- signal(s) - s++
+		}
+		- monitor {
+			- monitor type - a set of operations (to perform on shared resources) that provide mutual exclusion within the monitor
+			- semaphores: even of one process is not designed correctly to follow the rules of semaphores this could create synchronization problems for the entire system (e.g. deadlocks)
+			- unlike the semaphores the process doesn't have to be programmed to follow certain rules
+			- the monitor itself will provide the mutual exclusion and the processes will access resources via the monitors
+		}
+		- context switch {
+			- interrupts that cause CPU to change from it's current process to a kernel routine
+		}
+		- process scheduler - selects a process to run on CPU
+	}
+	- Design patterns {
+		- Factory {
+			- a method that returns one of several possible classes that have the same parent
+			- the class is chosen at runtime
+		}
+		- Builder {
+			- if a class has many fields and some of them can be null it's better to create an instance with a builder rather than a constructor
+		}
+		- Singleton {
+			- a class which can have only a single instance
+		}
+		- Observer (PubSub) {
+			- subject/publisher - source of events (e.g. new video uploaded)
+			- observers/subscribers - subscribe for events (get notified when a video is uploaded)
+			- publisher holds a list of subscribers and notifies them when something happens
+		}
+		- Iterator {
+			- defines a way to iterate through a data structure
+		}
+		- Strategy {
+			- allows to dynamically change the behaviour based on different strategies
+			- https://www.freecodecamp.org/news/a-beginners-guide-to-the-strategy-design-pattern/
+		}
+		- Adapter {
+			- integrates incompatible things
+			- e.g. XMLToJSONAdapter
+		}
+		- Facade {
+			- wrapper class that can be used to abstract lower level logic
+			- ArrayList is a facade for a dynamic array (we don't have to think about resizing)
+		}
+		- Decorator {
+			- wrapper class (decorator) that wraps the main functionality
+			- if we just extend the wrapper class we can add to the main functionality
+		}
+		- MVC
+	}
+	- memory {
+		- stack vs heap
+	}
+	- microservices
+}
+
+SDI systems (https://www.designgurus.io/course/grokking-the-system-design-interview) {
+	- TinyURL {
+		- key generation service
+		- job to delete expired urls
+	}
+	- Pastebin {
+		- key generation service
+		- object storage for the pastes
+		- job to delete expired urls
+	}
+	- Instagram / Twitter {
+		- images in object storage
+		- separate servers for read and write
+			- maybe master-slave replication where the master is for write and the slave is for read
+		- pre-generate news feed
+		- discuss feed generation options - pull, push, hybrid (solution to the popular users problem)
+	}
+	- Dropbox {
+		- break each file into chunks
+		- components:
+			- client (software on the client machine that chooses directory to sync)
+				- keep local metadata for offline updates
+				- long polling to get updates from other clients
+				- components:
+					- internal metadata DB
+					- chunker
+					- watcher
+					- indexer
+						- interface with the block server
+						- updates the metadata database
+			- block server - upload client changes to object storage
+				- deduplication
+			- metadata server
+				infor about:
+					- chunks
+					- files
+					- users
+					- devices
+					- worskpace
+			- synchronization server
+				- we can compare hash (e.g. SHA256) in order to check whether a file should be updated
+				- message queue between the synchronization server and the clients
+					- one request queue for all the client requests
+					- for every client - a response queue
+	}
+	- Messanger {
+		- WebSockets
+	}
+	- Youtube / Netflix {
+		- components:
+			- processing queue for the uploaded videos
+			- encoder - encode each video into different formats
+				- the format would depend on the network speed
+			- object storage - to store videos
+			- metadata storage
+		- use separate servers for read and write traffic
+		- use thread pool to pick a video from the queue, encode it in different formats and upload it to the object storage
+		- TCP over UDP because it's not a live stream
+	}
+	- Typeahead {
+		- distributed trie
+		- storage - serialize trie and keep it in file
+	}
+	- API rate liniter {
+		- https://www.youtube.com/watch?v=mhUQe4BKZXs
+		- approach 1:
+			- save in DB:
+				user | last_time | requests_left
+			- reset on every 1 minute e.g.
+	}
+	- Twitter search {
+		- save words (hashtags, etc.) with reference to the tweets they appear in -> inverted index, search index
+	}
+	- Web crawler {
+		- we should have initial URLs we should start the crawling (maybe the 100 most popular websites)
+		- thread pool that takes a URL to crawl
+		- we should render every URL (rendering libraries)
+		- we should respect robots.txt
+		- once we render it we should persist the content (add certain things to a search index)
+		- we might keep the content in file storage (+ deduplication) so that we can do easier edits when we refresh the content in future crawls
+		- we should also extract the URLs
+		- we should repeat the process for the next URL
+		- the process is ike BFS
+	}
+	- apps with maps (yelp, uber, etc) {
+		- discuss naive approach with latitude longitude
+		- quadtree with geohash with index on the column
+			- relational databases are optimize for string lookups especially when the column has index
+		- uber {
+			- in a service like uber where the positions change frequently and this changes the quadtree, we can keep additional hashtable with the drivers (that will update every 3 seconds) and update the quadtree less frequently (e.g. every 15 seconds)
+			- the clients should use long polling on push approach to keep getting the current map
+		}
+
+	}
+	- code deployment system {
+		- https://www.youtube.com/watch?v=q0KGYwNbf-0
+		- for building - queue with builds and thread of workers that execute the builds and upload them to blob storage
+		- for deploying - p2p network for faster download on the servers
+	}
+}
+
+Leetcode {
+	- LinkedList {
+		- dummy head (sentinel)
+		- two pointers, e.g. the second starts from a certain point of the list - https://leetcode.com/problems/remove-nth-node-from-end-of-list/ or https://leetcode.com/problems/palindrome-linked-list
+		- traverse once to get the information you need
+		- detect a cycle - slow pointer and fast pointer
+			- variation of a problem - when we need to find exact node - two phases: 1) slow and fast pointer; 2) reset with two slow pointers - https://leetcode.com/problems/linked-list-cycle-ii/
+			- https://leetcode.com/problems/happy-number/
+		- rewiring technique - useful to change the order of linked list elements - https://leetcode.com/problems/reverse-linked-list/ (3 pointers) or https://leetcode.com/problems/odd-even-linked-list/
+		- trick - https://leetcode.com/problems/copy-list-with-random-pointer/
+		- {label}before_interview) for the whole linked list section
+	}
+	- Array {
+		- two pointers
+		- traverse once to create an additional data structure (e.g. HashMap)
+		- greedy approach - Pick the locally optimal move at each step, and that will lead to the globally optimal solution. - https://leetcode.com/problems/maximum-subarray/ (could also be solved with sliding window)
+			- https://leetcode.com/problems/jump-game/ -> {label}before_interview)
+		- sliding window {
+			- if looking for unique elements - very careful evaluate if we need map or set - https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters/ (we need map because we want to keep track of the rightmost position of a unique character)
+			- use dequeue/doubly linked list - https://leetcode.com/problems/sliding-window-maximum/
+		}
+		- reverse different parts of the array - https://leetcode.com/problems/rotate-array/
+		- use indexes to mimic set - https://leetcode.com/problems/first-missing-positive/  -> {label}before_interview)
+	}
+	- Dynamic programming {
+		- https://leetcode.com/problems/house-robber/ , https://leetcode.com/problems/house-robber-iii/
+		- https://leetcode.com/problems/longest-increasing-subsequence/ , https://leetcode.com/problems/russian-doll-envelopes/
+		- when dealing with palindromes check twice for even and odd lengths and compare - https://leetcode.com/problems/longest-palindromic-substring/description/
+	}
+	- Queue {
+		- it is used in BFS
+		- use queue for combinations - https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+			- alternative is recursion (backtracking) but it gets very hard
+	}
+	- Stack {
+		- classic stack problems: https://leetcode.com/problems/valid-parentheses/ ; https://leetcode.com/problems/evaluate-reverse-polish-notation/ ; https://leetcode.com/problems/decode-string/ (three stacks)
+		- surprising stack problems:
+			- when we look for streaks we could keep adding the streak in the stack until we find something that breaks the streak and then we recalculate:
+				- https://leetcode.com/problems/daily-temperatures/
+				- https://leetcode.com/problems/largest-rectangle-in-histogram/ , https://leetcode.com/problems/maximal-rectangle/ (max = popedElemVal * (currElemIndex - topElemIndex - 1) -> {label}before_interview)
+				- https://leetcode.com/problems/online-stock-span/
+		- a lot of times actions with stack could happen without stack but with couple of additional variables
+			- https://leetcode.com/problems/basic-calculator-ii/
+			- https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/
+		- it is implicitly used in DFS because of the recursion
+	}
+	- Trie {
+		- good implementation - use Map<Char,Trie> and a boolean isCompleteWord (not every time)
+		- if we have pattern matching - use recursion in the search - https://leetcode.com/problems/design-add-and-search-words-data-structure/
+		- not every task wirh word search is solved with trie, e.g. https://leetcode.com/problems/word-ladder/ (just BFS), https://leetcode.com/problems/word-break-ii/ (just BFS)
+		- if we want to count the top sentences on every leve, have a map with counts on every level - https://leetcode.com/problems/design-search-autocomplete-system/ -> {label}before_interview)
+	}
+	- Graph {
+		- 2D array could be seen as a graph and we could do BFS/DFS on the 2D array - https://leetcode.com/problems/walls-and-gates/ or https://leetcode.com/problems/number-of-islands/ (remember to sink in all directions because of cases like [["1","1","1"],["0","1","0"],["1","1","1"]])
+			- sometimes instead of sinking we would like to temporarily mark some cells - https://leetcode.com/problems/surrounded-regions/
+		- when doing a BFS on a 2D array, consider having a Node class with row and col fields - https://leetcode.com/problems/walls-and-gates/
+		- directed graph could be represented as (u,v,w) triples (representing start node, end node, and weight of the direction) in 2D array - https://leetcode.com/problems/network-delay-time/
+	}
+	- Tree {
+		- preorder, postorder and inorder traversal - recursion with DFS
+		- level order traversal - BFS
+	}
+	- HashMap {
+		- can be implemented as an array (bucket) of linkedlists (elements in the bucket) and a hash function to determine the bucket
+		- key of appended strings (like "1#2#0...#0", "5row1"/"7col3", etc.) are very powerful - https://leetcode.com/explore/learn/card/hash-table/185/hash_table_design_the_key/1128/
+		- sometimes we need two hash maps - https://leetcode.com/problems/split-array-into-consecutive-subsequences/ -> {label}before_interview)
+	}
+	- String {
+		- if we are ony interested in the letters in a string (not their order) (e.g. anagram) we could represent the string as a char array of all the letters in the alphabet and how many times they appear in the string - https://leetcode.com/problems/valid-anagram/submissions/
+			- this array would be constant space as it always contains 26 elements
+			- if we care not only about lowercae characters, we could use a map of the ASCII codes
+			- also we could have a Map<Character,Integer> (how many time each char is in the string)
+		- rolling hash algorithm {
+			- https://leetcode.com/problems/implement-strstr/
+			- https://www.youtube.com/watch?v=H4VrKHVG5qI
+		}
+	}
+	- Heap {
+		- consider heaps for "top k elements" types of tasks
+		- consider heaps when we have to keep top elements - https://leetcode.com/problems/meeting-rooms-ii/ or https://leetcode.com/problems/merge-k-sorted-lists/
+		- Dijkstra algorithm uses heaps {
+				- it uses heap on every step we select the node with the shortest path so far and then we check whether this node can update the shortest paths for it's neighbours
+		}
+		- heaps are good for keeping the median - https://leetcode.com/problems/find-median-from-data-stream/
+	}
+	- Dijkstra {
+		https://leetcode.com/problems/cheapest-flights-within-k-stops/
+		https://leetcode.com/problems/network-delay-time/
+		- adjecency map + min heap + visited set
+		- time: O(ElogV)
+	}
+	- Binary tree {
+		- diameter of a binary tree - {label}before_interview
+			- https://leetcode.com/problems/diameter-of-binary-tree/
+			---old---
+			- we should consider two cases - 1) root is in the diameter - max(left, right) and 2) root is not in the diameter - max(left + right)
+			- we should also consider that the second case will not be true for all the levels of the recursion, so we should keep it as a globalMax and return only the first case from the recursive method
+			- this is kind of greedy approach
+			---old---
+			- we should still consider the two cases - 1) root is in the diam; 2) root is not in the diam (these two cases will lead us to the formula)
+			- on every level of the dfs return a pair [height, diam] where height = max(lh, rh) + 1 and diam = max((lh + rh + 1), max(ld, rd))
+			- this one is kind of similar - https://leetcode.com/problems/binary-tree-maximum-path-sum/ {
+				- only this time we have 4 cases: 1) root; 2) root + left; 3) root + right; 4) root + left + right
+				- we should consider that case 4) is not true for every level of the recursion, so we should keep it as a globalMax and only return the localMax(cases 1-3)
+			}
+		- when we have to serialize and deserialize a binary tree (https://leetcode.com/problems/serialize-and-deserialize-binary-tree/) we should have in mind:
+			- the order we serialize matters - it is best if we serialize the curr node and add the left and the right to the queue to be serialized
+			- when we deserialize we could split by the delimiter
+			- when we deserialize we could loop through the splitter values rather than the queue
+	}
+	- Binary search {
+		- int mid = low + ((high - low) / 2); instead of int mid =(low + high) / 2; {
+			- https://ai.googleblog.com/2006/06/extra-extra-read-all-about-it-nearly.html
+		- three templates - https://leetcode.com/explore/learn/card/binary-search/138/background/971/ {
+			- {label}before_interview
+			- template 1 - when all elements are "equaly important"
+			- template 2 - when after some element there is a change, e.g. after some version of the code all the versions are corrupt
+				- reverted template 2 - https://leetcode.com/explore/learn/card/binary-search/135/template-iii/944/ (second while)
+		}
+		- https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
+	}
+	- BST {
+		- inorder traversal guarantees sorted values
+		- LCA of two nodes is the first node we find which value is between the value of the two nodes -  https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
+	}
+	- BFS {
+		- use queue
+		- if possible cyclic graph - use hash set for visited
+		- good for combinations - https://leetcode.com/problems/word-ladder/ or https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+	}
+	- DFS {
+		- implicit usage of stack because of the recursion
+	}
+	- Topological sort {
+		- the key to implementing topological sort is creating an indegrees map and then modified BFS - https://leetcode.com/problems/course-schedule/
+		- the condition for "can't finish" scenario is: node is in prerequisites, but didn't manage to add it to the order after the BFS -  https://leetcode.com/problems/course-schedule-ii/
+		- time and space complexity for topological sort: O(V + E)
+		- cannot use topological sort if some of the vertices will not lead to other edges, e.g. https://leetcode.com/problems/reconstruct-itinerary/
+			- we migh use a stack
+	}
+	- recursion {
+		- memoization
+		- tail recursion - https://www.youtube.com/watch?v=_JtPhF8MshA - there is no optimization for tail recursion in Java
+		- if we want to make iterative solution - consider stack (simulates recursion on the memory stack), e.g.inorder binary tree traversal
+		- backtracking {
+			- template - https://leetcode.com/explore/learn/card/recursion-ii/472/backtracking/2793/
+			- https://leetcode.com/problems/robot-room-cleaner/ -> {label}before_interview)
+		- be careful not to visit the starting point again - https://leetcode.com/problems/flood-fill/
+		}
+	}
+	- TreeMap {
+		- TreeMap uses red-black trees / balanced trees - the difference with BST is that here we are guaranteed to have a balanced tree (logn height) because of the properties of a red-black tree
+		- youtube.com/watch?v=qvZGUFHWChY
+		- TreeMap has useful methods about the prev and the next elements - https://leetcode.com/problems/my-calendar-i/
+	}
+	- Bit manipulation {
+		- https://www.youtube.com/watch?v=7jkIUgLC29I
+		- shifting can be used for multiplying and dividing, but also to create a mask in order to set/clear/flip/check if set a bit at certain position
+		- tricks: {
+			- check if even: (x & 1) == 0
+			- check if power of two: (x & x-1) == 0
+			- check if two numbers are the same: (x ^ y) == 0 -> https://leetcode.com/problems/single-number/
+		- logical(>>>) vs. arithmetic(>>) right shift
+		- add two numbers without using + (bit manipulation is only used by people with mental issues)
+			- https://leetcode.com/articles/add-binary/
+			- https://www.youtube.com/watch?v=qq64FrA2UXQ&t=847s
+		}
+	}
+	Design coding questions {
+		- Introduce additional data structure or enhance current to keep track of something important in order to reduce the time complexity - https://leetcode.com/problems/min-stack/ , https://leetcode.com/problems/lru-cache/ (the trick to making this O(1) is that the map key points to the doubly linked list node in the heap) or https://leetcode.com/problems/maximum-frequency-stack/
+	}
+
+	- General {
+		- before implementing something complicated like backtracking in an array check if there is no easy solution - https://leetcode.com/problems/jump-game/
+	}
+}
+
+Helpful methods and constants and expressions {
+	- Character.getNumericValue(char ch)
+	- Character.isDigit(char ch)
+	- Character.isLetter(char ch)
+	- Integer.valueOf(String s), Integer.valueOf(String s)
+	- public boolean equals(Object o) - it takes Object as a parameter
+	- public int hashCode()
+	- Arrays.copyOfRange(T[] original, int from, int to) - from inclusive to exclusive
+	- Integer.MAX_VALUE, Integer.MIN_VALUE
+	- LinkedList.peekFirst()/LinkedList.peekLast(), LinkedList.getFirst()/LinkedList.getLast(), LinkedList.pollFirst()/LinkedList.pollLast() (LinkedList is a doubly linked list)
+	- Pair<K,V>
+	- for (Map.Entry<Integer,Integer> entry : map.entrySet())
+	- array to set: Set<Integer> set = new HashSet<Integer>(Arrays.asList(sourceArray));
+	- ^ is not power but XOR
+	- List<String> -> String[]:
+		List<String> list = new ArrayList<>();
+		String[] arr = new String[list.size()];
+		arr = list.toArray(arr);
+	- List<Integer> -> int[]:
+		int[] array = list.stream().mapToInt(i->i).toArray();
+	- for (char c : s.toCharArray())
+	- Math.max(T a, T b)
+	- List<E>.add(int position, E element)/List<E>.set(int position, E element)
+		- we cannot set if we haven't added elements
+		- if we add at a certain position (add(i, e)) and this position already has an element, the element is added at the next position
+		- bad idea to use set/add to index - better use just add if possible
+	- StringBuilder.length()
+	- when I want to return an empty list of lists: return new ArrayList<List<Integer>>();
+	- remove last char from StringBuilder - sb.setLength(sb.length() - 1);
+	- StringBuilder also has a charAt() method
+	- list1.equals(list2) == true if same elements and same order
+	- get char ASCII code - (int) charVal
+	- map.getOrDefault(key, default) -> instead of checking if the map contains the key
+	- Queue<T> queue = new LinkedList<>() -> queue.offer(null) is valid
+	- string.split("...", x) -> splits the string on x parts according to the delimiter
+	- get random number in range:
+		 Random rand = new Random();
+		 random.nextInt(max - min) + min; / random.nextInt(max); (if min is 0)
+	- PriorityQueue is min heap by default. For max heap:
+		Queue<Integer> maxHeap = new PriorityQueue<Integer>(Collections.reverseOrder());
+}
+
+
+Math knowledge {
+	- sum of first N numbers formula
+	- median formula
+	- matrix multiplication
+	- permutation {
+		- with repetition - lock combinations
+		- without repetition - first three people in a race
+	}
+	- combination {
+		- with repetition - 5 flavors ice cream for three scoops
+		- without repetition - 6/49
+	}
+	- variations {
+		- same as combinations but order does matter
+	}
+}

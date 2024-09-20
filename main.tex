@@ -1,0 +1,42 @@
+\documentclass{book}
+\include{packages}
+\title{.NET Interview Questions}
+\author{Konstantin Milchev }
+\date{}
+
+% Globally center all chapter titles
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\centering} % Format for the chapter title (centering)
+  {} % Label (empty since you may be using \chapter* for no numbering)
+  {0pt} % Space before the title
+  {\Huge} % Format of the chapter title itself
+
+  
+% Configure fancyhdr
+\pagestyle{fancy}      % Use fancy page style for default layout
+\fancyhf{}             % Clear all header and footer fields
+\fancyfoot[C]{\thepage} % Set page number at the bottom center by default
+\renewcommand{\headrulewidth}{0pt} % Remove the header line
+\setlength{\headheight}{0pt}       % Remove the height of the header
+ 
+\begin{document}
+
+% Title Page
+\maketitle
+
+% Use \clearpage to avoid blank pages
+\clearpage
+
+% Table of Contents
+\tableofcontents
+
+% Start of the pages
+ 
+\newpage
+% Include other files here
+\include{Patterns/Outline}
+\include{DataStructures/Outline}
+	
+
+
+\end{document}

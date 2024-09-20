@@ -1,0 +1,42 @@
+\chapter*{Sql Indexes} % or \section*{} depending on your document class
+\hypertarget{page1}{} % Target for hyperlink in the main document
+
+
+\section*{Clustered} % Section for Header information
+\begin{itemize}
+    \item Information
+    \begin{itemize}
+        \item Physically sorts the data of a table. Fast retrieval due to the sort.
+        \item There can only be 1 clustered index per table.
+        \item Automatically created on the Primary Key.
+        \item Internally Clustered index uses a B-Tree data structure.
+        \item Index is saved on disk.
+    \end{itemize}
+
+    \item Drawbacks
+    \begin{itemize}
+        \item Inserts, Updates, Deletes as the table needs to reorganize it's data. Especially if the inserted row doesn't fit in the normal sequence. 
+        \item Not suitable to columns often being updated.
+        \item There can only be 1 clustered index per table.
+        \item Data in a database is stored in pages (fixed-size chunks of memory, typically 8KB in size). When a new row is inserted and there is no more room on the page there will be a page split which is more resource intensive and time consuming.
+    \end{itemize}
+\end{itemize}
+
+\section*{Non-Clustered} % Section for Header information
+    \begin{itemize}
+    \item Information
+        \begin{itemize}
+        \item Not stored physically. A separate entity manages the pointers to the rows of data
+        \item We can have more than 1 Non Clustered Index
+        \item Internally Non-Clustered index also uses a B-Tree data structure
+        \end{itemize}
+        
+    \begin{itemize}
+    \item Drawbacks
+            \begin{itemize}
+            \item As another entity is created to manage the index there is more storage space consumed
+            \item When table data is modified ther index needs to be updated. Thus, a table with many clustered indexes, which is often updated will have a performance dip.
+            \end{itemize}
+    \item Information
+    \end{itemize}
+\end{itemize}
