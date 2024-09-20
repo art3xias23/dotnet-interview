@@ -11,16 +11,33 @@
 \definecolor{greencomments}{rgb}{0,0.5,0}
 \definecolor{redstrings}{rgb}{0.9,0,0}
 
+% Define custom colors for SQL
+\definecolor{sqlKeyword}{RGB}{0, 0, 128}   % Dark blue for keywords
+\definecolor{sqlComment}{RGB}{128, 128, 128} % Gray for comments
+\definecolor{sqlString}{RGB}{255, 0, 0}     % Red for strings
+
 \usepackage{listings}
-\lstset{language=[Sharp]C,
-  showspaces=false,
-  showtabs=false,
-  breaklines=true,
-  showstringspaces=false,
-  breakatwhitespace=true,
-  escapeinside={(*@}{@*)},
-  commentstyle=\color{greencomments},
-  keywordstyle=\color{bluekeywords},
-  stringstyle=\color{redstrings},
-  basicstyle=\ttfamily
+\lstdefinestyle{CSharp}{
+    language=[Sharp]C,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true,
+    breakatwhitespace=true,
 }
+
+% Define style for SQL
+\lstdefinestyle{SQL}{
+    language=SQL,
+    showspaces=false,
+    basicstyle=\ttfamily,            % Monospace font
+    numbers=left,                    % Line numbers on the left
+    numberstyle=\tiny,               % Smaller font for line numbers
+    keywordstyle=\color{sqlKeyword}, % Color for keywords
+    commentstyle=\color{sqlComment}, % Color for comments
+    stringstyle=\color{sqlString}    % Color for strings
+}
+
+

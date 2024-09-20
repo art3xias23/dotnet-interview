@@ -1,0 +1,29 @@
+\chapter{Eventual vs. Strong Consistency}
+
+When it comes to big data that is shared across several nodes (servers with one or more databases), an update to one of the databases may take some time to reach the other databases (replicas). Therefore, a choice must be made regarding which \textbf{consistency} model to use. This choice will, in turn, affect:
+\section{Considerations}
+\begin{itemize} 
+	\item \textbf{Consistency} - The model dictates how and when updates to the database are propagated to replicas. \textbf{Strong consistency} ensures that all reads return the most recent write, while \textbf{Eventual consistency} allows for temporary discrepancies between replicas. 
+		\item \textbf{Availability} - This refers to how quickly data becomes available from a replica database after an update. Eventual consistency often allows for higher availability because it enables updates to proceed without waiting for all replicas to synchronize. 
+			\item \textbf{Latency} - This is the time it takes for a change made in one database to be reflected in another. In systems with strong consistency, latency can be higher due to the need for coordination among nodes to ensure all replicas have the latest data before allowing reads. In contrast, eventual consistency may result in lower latency for writes since updates can be applied immediately without waiting for all replicas to agree. 
+\end{itemize}
+
+\section{Comparison}
+\begin{center}
+	\begin{tabular}{||c c c||}
+		\hline
+		Consistency & Availability & Latency\\
+		\hline \hline
+		Strong & Low & High\\
+		\hline
+		Eventual & High & Low\\
+		\hline
+	\end{tabular}
+\end{center}
+
+\section{Examples}
+
+\begin{itemize}
+	\item{Strong Consistency} - Stock Market as it's crucial that the most recent data can be interacted with
+	\item {Eventual Consistency} - Youtube views as it's fine if there is a slight delay in the most up to date view count
+\end{itemize}

@@ -1,0 +1,31 @@
+\chapter{Optimistic vs Pessimistic Concurrency}
+
+\section{Optimistic}
+\begin{itemize}
+	\item Multiple Transactions or users are allowed to access a resource
+	\item It's assumed \textbf{conflicts will rarely occur}
+	\item Conflicts are only checked \textbf{during the commit stage}
+	\item During a conflict the system checks if the data has been modified by another process 
+	and if it has a conflict exception is thrown and \textbf{the user needs to retry or resolve the conflict}
+\end{itemize}
+
+\section{Pessimistic}
+\begin{itemize}
+	\item It's assumed \textbf{conflicts will likely occur}
+	\item When a resource is accessed a lock is placed on it
+	
+		\begin{lstlisting}[style=Sql]
+-- Lock the row with an update lock to prevent other transactions from modifying it
+SELECT *
+FROM employees WITH (UPDLOCK)
+WHERE employee_id = 123;
+
+-- Perform the update on the locked row
+UPDATE employees
+SET salary = salary * 1.05
+WHERE employee_id = 123;
+
+-- Commit the transaction to release the lock
+COMMIT;
+		\end{lstlisting}
+\end{itemize}
