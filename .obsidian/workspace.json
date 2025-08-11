@@ -1,0 +1,349 @@
+{
+  "main": {
+    "id": "3f252ece8946a6c4",
+    "type": "split",
+    "children": [
+      {
+        "id": "724801fb9d4a4992",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bcf24f2053cc7366",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "General/Dependency Injection.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Dependency Injection"
+            }
+          },
+          {
+            "id": "5ad668b9f07336cc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "General/Eager vs Lazy Loading.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Eager vs Lazy Loading"
+            }
+          },
+          {
+            "id": "41a41d2cc4bd11f4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "General/Garbage Collection vs IDisposable.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Garbage Collection vs IDisposable"
+            }
+          },
+          {
+            "id": "00b1cb4ff9a15e1c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "General/Static vs Singleton.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Static vs Singleton"
+            }
+          },
+          {
+            "id": "13f2317be27aef9b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "General/Unit of Work Pattern.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Unit of Work Pattern"
+            }
+          },
+          {
+            "id": "a27a1e5493b66d56",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CSharp/Dictionary.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Dictionary"
+            }
+          },
+          {
+            "id": "70cdef7440e13555",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CSharp/Yield Return.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Yield Return"
+            }
+          },
+          {
+            "id": "9ad4777f7d0878b1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Transformation/Base64.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Base64"
+            }
+          },
+          {
+            "id": "3d3be80e104183c4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Data Transformation/Hashes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Hashes"
+            }
+          },
+          {
+            "id": "6f29bb389cd4fac4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "SQL/SQL Indexes.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SQL Indexes"
+            }
+          },
+          {
+            "id": "0f49035ea2af3f4e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "SQL/SQL Isolation Levels.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SQL Isolation Levels"
+            }
+          },
+          {
+            "id": "b9ec0bd857d03a4c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Web/HTTP Methods and Headers.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "HTTP Methods and Headers"
+            }
+          }
+        ],
+        "currentTab": 11
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "00bf10a5c1931a41",
+    "type": "split",
+    "children": [
+      {
+        "id": "f8adbad99e32ab5a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d3698e6f7eb30dce",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a6dcb305aef7c76e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "6ef2cb9f342fe904",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "af1bc1438d365bf0",
+    "type": "split",
+    "children": [
+      {
+        "id": "f3b82f0d04d2915b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "de7de04fb02ea8a6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Eventual vs. Strong Consistency.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Eventual vs. Strong Consistency"
+            }
+          },
+          {
+            "id": "78c2fc86b15ccd78",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Eventual vs. Strong Consistency.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Eventual vs. Strong Consistency"
+            }
+          },
+          {
+            "id": "fb7652ada426a7d0",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "8a0e264550d44088",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Eventual vs. Strong Consistency.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Eventual vs. Strong Consistency"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "b9ec0bd857d03a4c",
+  "lastOpenFiles": [
+    "Welcome.md",
+    "SQL/SQL Isolation Levels.md",
+    "Web/HTTP Methods and Headers.md",
+    "Web",
+    "SQL/SQL Indexes.md",
+    "Data Transformation/Hashes.md",
+    "SQL",
+    "Data Transformation/Base64.md",
+    "CSharp/Yield Return.md",
+    "Data Transformation",
+    "CSharp/Dictionary.md",
+    "General/Unit of Work Pattern.md",
+    "CSharp",
+    "General/Static vs Singleton.md",
+    "General/Garbage Collection vs IDisposable.md",
+    "General/Eager vs Lazy Loading.md",
+    "General/Dependency Injection.md",
+    "General/Eventual vs. Strong Consistency.md",
+    "General",
+    "General/Optimistic vs Pessimistic Concurrency.md"
+  ]
+}
